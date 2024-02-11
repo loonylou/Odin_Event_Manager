@@ -70,7 +70,7 @@ def write_letters()
   end
 end
 
-def analyse_registrations()
+def analyse_registration_times()
   hour_counts = get_attendees().each_with_object(
     Hash.new(0)) do |row, new_hash|
       new_hash[row[:regdate].split(' ')[1].split(':')[0]] += 1  
@@ -79,11 +79,23 @@ def analyse_registrations()
   puts 'Most popular registration hour: ' + hour_counts.max_by{|k,v| v}[0].to_s + ":00"
 end
 
+def analyse_registration_dates()
+  day_counts = get_attendees().each_with_object(
+    Hash.new(0)) do |row, new_hash|
+      row[:regdate].gsub!('08', '2008')
+      new_hash[Date.strptime(row[:regdate], '%m/%d/%Y').strftime('%A')] += 1
+  end
+
+  puts 'Most popular registration day: ' + day_counts.max_by{|k,v| v}[0].to_s
+end
 
 # Run V1 Only
 # write_letters()
 
 # Run V2 Only
-analyse_registrations()
+# analyse_registration_times()
+
+# Run V3 only
+analyse_registration_dates()
 
 
